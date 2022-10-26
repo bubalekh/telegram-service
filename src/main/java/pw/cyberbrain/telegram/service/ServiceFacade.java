@@ -22,7 +22,7 @@ public class ServiceFacade {
 
     DeliverCallback deliverCallback = (consumerTag, delivery) -> {
         String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-        notificationService.notify(MessageDto.getMessageDto(message));
+        notificationService.sendNotification(MessageDto.getMessageDto(message));
         System.out.println(" [x] Received '" + message + "'");
     };
 }
