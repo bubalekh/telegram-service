@@ -1,4 +1,4 @@
-package pw.cyberbrain.telegram;
+package pw.cyberbrain.telegram.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
