@@ -34,4 +34,9 @@ JSON syntax:
 
 where:  
 **chatId** - Telegram chat id for specific dialog (`long`);  
-**payload** - JSON array of strings (`List<String>`).
+**payload** - JSON array of strings (`List<String>`).  
+
+## TODO
+
+- RabbitMQ's credentials (login and password);
+- Automatic pagination of huge messages!
