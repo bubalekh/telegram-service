@@ -10,6 +10,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pw.cyberbrain.telegram.dto.MessageDto;
 import pw.cyberbrain.telegram.service.messaging.RabbitClient;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 @Service
 public class TelegramService extends TelegramLongPollingBot implements NotificationService {
 
@@ -21,10 +24,6 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
     @Autowired
     public TelegramService(RabbitClient client) {
         this.client = client;
-    }
-
-    public RabbitClient getClient() {
-        return client;
     }
 
     @Override
@@ -40,8 +39,7 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            //Логика отправки сообщения в rabbit
-            //client.send(new MessageDto(update.getMessage().getChatId(), update.getMessage().getText()));
+            client.send(new MessageDto(update.getMessage().getChatId(), new ArrayList<>(Collections.singleton(update.getMessage().getText()))));
         }
     }
 
@@ -49,7 +47,9 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
     public void notify(MessageDto dto) {
         if (dto != null) {
             SendMessage message = new SendMessage();
-            //message.setText(dto.getPayload());
+            StringBuilder payload = new StringBuilder();
+            dto.getPayload().forEach(p -> payload.append(p).append('\n'));
+            message.setText(payload.toString());
             try {
                 message.setChatId(dto.getChatId());
                 execute(message);

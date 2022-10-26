@@ -1,5 +1,7 @@
 package pw.cyberbrain.telegram.dto;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,11 +15,14 @@ public class MessageDto {
     private Long chatId;
     private List<String> payload;
 
-    /*@Override
-    public String toString() {
-        return "{\n" +
-                "\"chatId\": " + chatId + ",\n" +
-                "\"payload\": \"" + payload  + "\"\n" +
-                "}\n";
-    }*/
+    public static MessageDto getMessageDto(String message) {
+        ObjectMapper mapper = new ObjectMapper();
+        MessageDto messageDto = new MessageDto();
+        try {
+            messageDto = mapper.readValue(message, MessageDto.class);
+        } catch (JsonProcessingException e) {
+            System.out.println("Incorrect message!");
+        }
+        return messageDto;
+    }
 }

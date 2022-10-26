@@ -1,27 +1,20 @@
 package pw.cyberbrain.telegram.service.messaging;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rabbitmq.client.DeliverCallback;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.DeliverCallback;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import pw.cyberbrain.telegram.dto.MessageDto;
-import pw.cyberbrain.telegram.service.telegram.NotificationService;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeoutException;
 
 @Service
 public class RabbitClient {
-    private final NotificationService service;
     @Value("${notification.receive.queue}")
     private String RECEIVE_QUEUE;
     @Value("${notification.transmit.queue}")
@@ -32,11 +25,6 @@ public class RabbitClient {
     private Connection connection;
     private Channel channel;
 
-    @Autowired
-    public RabbitClient(@Lazy NotificationService service) {
-        this.service = service;
-    }
-
     @PostConstruct
     public void initialize() throws TimeoutException, IOException {
         factory.setHost(HOST);
@@ -46,15 +34,14 @@ public class RabbitClient {
         channel.queueDeclare(RECEIVE_QUEUE, false, false, false, null);
         channel.queueDeclare(TRANSMIT_QUEUE, false, false, false, null);
         System.out.println(" [*] Message Receiver has been started!");
+    }
 
-        DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-            String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-            service.notify(getMessageDto(message));
-            System.out.println(" [x] Received '" + message + "'");
-        };
-
-        channel.basicConsume(RECEIVE_QUEUE, true, deliverCallback, consumerTag -> {
-        });
+    public void registerConsumeCallback(DeliverCallback callback) {
+        try {
+            channel.basicConsume(RECEIVE_QUEUE, true, callback, consumerTag -> {});
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void send(MessageDto message) {
@@ -64,21 +51,6 @@ public class RabbitClient {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private MessageDto getMessageDto(String message) {
-        ObjectMapper mapper = new ObjectMapper();
-        MessageDto messageDto = new MessageDto();
-        try {
-            messageDto = mapper.readValue(message, MessageDto.class);
-        } catch (JsonProcessingException e) {
-            System.out.println("Incorrect message!");
-        }
-        return messageDto;
-    }
-
-    public String getPayloadFromMessageDto(MessageDto dto) {
-        return null;
     }
 
     @PreDestroy
