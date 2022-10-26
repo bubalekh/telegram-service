@@ -21,6 +21,9 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
     @Value("${telegram.bot.token}")
     private String botToken;
 
+    @Value("${telegram.bot.name}")
+    private String botName;
+
     @Autowired
     public TelegramService(RabbitClient client) {
         this.client = client;
@@ -28,7 +31,7 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
 
     @Override
     public String getBotUsername() {
-        return "callRequestBot";
+        return botName;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
     }
 
     @Override
-    public void notify(MessageDto dto) {
+    public void sendNotification(MessageDto dto) {
         if (dto != null) {
             SendMessage message = new SendMessage();
             StringBuilder payload = new StringBuilder();

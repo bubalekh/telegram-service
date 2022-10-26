@@ -4,24 +4,24 @@
 
 run in **docker**:
 
-    docker run -d -e HOST=dummy telegram-service:v0.1
+    docker run -d -e RABBIT_HOST=dummy telegram-service:v0.1
 
 or in **docker-compose.yml**:
 
     telegram-service:
         image: telegram-service:v0.1
         environment:
-            HOST:
-            RECEIVE_QUEUE:
-            TRANSMIT_QUEUE:
-            TOKEN:
+            RABBIT_HOST:
+            RABBIT_QUEUE_RECEIVE:
+            RABBIT_QUEUE_TRANSMIT:
+            TELEGRAM_BOT_TOKEN:
 
 ## Environment variables
 
-**HOST** - hostname for RabbitMQ connection (*default*: localhost).  
-**RECEIVE_QUEUE** - name of the queue from which messages will be sent using the Telegram Service.  
-**TRANSMIT_QUEUE** - the name of the queue to which messages from Telegram users will be sent to your service.  
-**TOKEN** - Telegram Bot API token.  
+**RABBIT_HOST** - hostname for RabbitMQ connection (*default*: localhost).  
+**RABBIT_QUEUE_RECEIVE** - name of the queue from which messages will be sent using the Telegram Service.  
+**RABBIT_QUEUE_TRANSMIT** - the name of the queue to which messages from Telegram users will be sent to your service.  
+**TELEGRAM_BOT_TOKEN** - Telegram Bot API token.  
 
 ## Message structure
 
