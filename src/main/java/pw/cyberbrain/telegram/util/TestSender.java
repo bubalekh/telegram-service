@@ -16,7 +16,7 @@ public class TestSender {
     public static void main(String[] argv) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setHost("172.19.0.3");
         try (Connection connection = factory.newConnection();
              Channel channel = connection.createChannel()) {
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);

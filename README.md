@@ -16,6 +16,28 @@ or in **docker-compose.yml**:
             RABBIT_QUEUE_TRANSMIT:
             TELEGRAM_BOT_TOKEN:
 
+or in kubernetes (**telegram-service-pod.yml**):
+
+    apiVersion: v1
+    kind: Pod
+    metadata:
+    name: telegram-service
+    spec:
+      containers:
+        - name: telegram-service
+        image: telegram-service:v0.1
+        env:
+        - name: RABBIT_HOST
+        value: 
+        - name: RABBIT_QUEUE_RECEIVE
+        value: 
+        - name: RABBIT_QUEUE_TRANSMIT
+        value: 
+       - name: TELEGRAM_BOT_TOKEN
+        value: 
+      nodeName: 
+
+
 ## Environment variables
 
 **RABBIT_HOST** - hostname for RabbitMQ connection (*default*: localhost).  

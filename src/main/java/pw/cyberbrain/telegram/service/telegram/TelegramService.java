@@ -12,6 +12,7 @@ import pw.cyberbrain.telegram.service.messaging.RabbitClient;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class TelegramService extends TelegramLongPollingBot implements NotificationService {
@@ -42,7 +43,8 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            client.send(new MessageDto(update.getMessage().getChatId(), new ArrayList<>(Collections.singleton(update.getMessage().getText()))));
+            MessageDto messageDto = new MessageDto(update.getMessage().getChatId(), new ArrayList<>(List.of(update.getMessage().getText())));
+            client.send(MessageDto.getMessageFromDto(messageDto));
         }
     }
 
@@ -60,5 +62,11 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onRegister() {
+        super.onRegister();
+        //TODO: Liveness Probe System.out.println("Bot has been registered");
     }
 }

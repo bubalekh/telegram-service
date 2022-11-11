@@ -54,9 +54,9 @@ public class RabbitClient {
         }
     }
 
-    public void send(MessageDto message) {
+    public void send(String message) {
         try {
-            channel.basicPublish("", TRANSMIT_QUEUE, null, message.toString().getBytes());
+            channel.basicPublish("", TRANSMIT_QUEUE, null, message.getBytes());
             logger.info("Message: " + message + " has been sent!");
         } catch (IOException e) {
             logger.error("Message " + message + "was not sent!");

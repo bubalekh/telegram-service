@@ -25,7 +25,7 @@ public class ServiceFacade {
         rabbitClient.registerConsumeCallback(deliverCallback);
     }
 
-    DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+    private DeliverCallback deliverCallback = (consumerTag, delivery) -> {
         String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
         notificationService.sendNotification(MessageDto.getMessageDto(message));
         logger.info("Message " + message + " has been received!");

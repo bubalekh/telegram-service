@@ -25,4 +25,13 @@ public class MessageDto {
         }
         return messageDto;
     }
+    public static String getMessageFromDto(MessageDto messageDto) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(messageDto);
+        } catch (JsonProcessingException e) {
+            System.out.println("Incorrect message!");
+        }
+        return "null";
+    }
 }
