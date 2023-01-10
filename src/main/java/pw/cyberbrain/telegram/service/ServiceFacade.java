@@ -26,6 +26,5 @@ public class ServiceFacade {
             logger.info("Message " + message + " has been received!");
         };
         integrationService.setConsumingCallback(deliverCallback);
-        //integrationService.registerConsumeCallback(deliverCallback);
     }
 }
