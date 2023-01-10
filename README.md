@@ -21,7 +21,7 @@ or in kubernetes (**telegram-service-deployment.yml**):
     apiVersion: apps/v1
     kind: Deployment
     metadata:
-      name: nginx-deployment
+      name: telegram-service
       labels:
         app: telegram-service
     spec:
