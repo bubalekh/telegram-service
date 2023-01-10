@@ -1,0 +1,26 @@
+#Rabbit
+rabbit:
+  host: ${RABBIT_HOST:localhost}
+  login: TBD
+  password: TBD
+  queue:
+    receive: ${RABBIT_QUEUE_RECEIVE:test-queue}
+    transmit: ${RABBIT_QUEUE_TRANSMIT:test-queue}
+
+#Telegram
+telegram:
+  bot:
+    name: ${TELEGRAM_BOT_NAME:test-bot}
+    token: ${TELEGRAM_BOT_TOKEN}
+
+#Kubernetes probes
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
