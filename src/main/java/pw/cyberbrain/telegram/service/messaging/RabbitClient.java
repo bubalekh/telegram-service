@@ -23,6 +23,10 @@ public class RabbitClient implements IntegrationService {
     private String TRANSMIT_QUEUE;
     @Value("${rabbit.host}")
     private String HOST;
+    @Value("${rabbit.username}")
+    private String USERNAME;
+    @Value("${rabbit.password}")
+    private String PASSWORD;
     private final ConnectionFactory factory = new ConnectionFactory();
     private Connection connection;
     private Channel channel;
@@ -32,6 +36,8 @@ public class RabbitClient implements IntegrationService {
     @PostConstruct
     public void initialize() {
         factory.setHost(HOST);
+        factory.setUsername(USERNAME);
+        factory.setPassword(PASSWORD);
         try {
             connection = factory.newConnection();
             channel = connection.createChannel();

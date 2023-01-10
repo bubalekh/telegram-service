@@ -1,8 +1,8 @@
 #Rabbit
 rabbit:
   host: ${RABBIT_HOST:localhost}
-  login: TBD
-  password: TBD
+  username: ${RABBIT_USERNAME:guest}
+  password: ${RABBIT_PASSWORD:guest}
   queue:
     receive: ${RABBIT_QUEUE_RECEIVE:test-queue}
     transmit: ${RABBIT_QUEUE_TRANSMIT:test-queue}
