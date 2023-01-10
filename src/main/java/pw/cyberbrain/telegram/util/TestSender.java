@@ -11,12 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestSender {
-    private final static String QUEUE_NAME = "receive.queue";
+    private final static String QUEUE_NAME = "test-queue";
+    //private final static String QUEUE_NAME = "receive.queue";
 
     public static void main(String[] argv) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("172.19.0.3");
+        factory.setHost("localhost");
         try (Connection connection = factory.newConnection();
              Channel channel = connection.createChannel()) {
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);

@@ -4,11 +4,11 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
+import org.aopalliance.reflect.Class;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import pw.cyberbrain.telegram.dto.MessageDto;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 @Service
-public class RabbitClient {
+public class RabbitClient implements IntegrationService {
     @Value("${rabbit.queue.receive}")
     private String RECEIVE_QUEUE;
     @Value("${rabbit.queue.transmit}")
@@ -44,9 +44,11 @@ public class RabbitClient {
         }
     }
 
-    public void registerConsumeCallback(DeliverCallback callback) {
+    @Override
+    public void setConsumingCallback(Object callback) {
         try {
-            channel.basicConsume(RECEIVE_QUEUE, true, callback, consumerTag -> {});
+            DeliverCallback deliverCallback = (DeliverCallback) callback;
+            channel.basicConsume(RECEIVE_QUEUE, true, deliverCallback, consumerTag -> {});
             logger.info("RabbitMQ Consume callback has been set up");
         } catch (IOException e) {
             logger.error("RabbitMQ Consume callback set up failed!");
@@ -54,7 +56,8 @@ public class RabbitClient {
         }
     }
 
-    public void send(String message) {
+    @Override
+    public void sendForHandling(String message) {
         try {
             channel.basicPublish("", TRANSMIT_QUEUE, null, message.getBytes());
             logger.info("Message: " + message + " has been sent!");

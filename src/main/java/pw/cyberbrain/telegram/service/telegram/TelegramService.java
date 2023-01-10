@@ -8,16 +8,16 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pw.cyberbrain.telegram.dto.MessageDto;
+import pw.cyberbrain.telegram.service.messaging.IntegrationService;
 import pw.cyberbrain.telegram.service.messaging.RabbitClient;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
 public class TelegramService extends TelegramLongPollingBot implements NotificationService {
 
-    private final RabbitClient client;
+    private final IntegrationService integrationService;
 
     @Value("${telegram.bot.token}")
     private String botToken;
@@ -26,8 +26,8 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
     private String botName;
 
     @Autowired
-    public TelegramService(RabbitClient client) {
-        this.client = client;
+    public TelegramService(IntegrationService integrationService) {
+        this.integrationService = integrationService;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             MessageDto messageDto = new MessageDto(update.getMessage().getChatId(), new ArrayList<>(List.of(update.getMessage().getText())));
-            client.send(MessageDto.getMessageFromDto(messageDto));
+            integrationService.sendForHandling(MessageDto.getMessageFromDto(messageDto));
         }
     }
 
