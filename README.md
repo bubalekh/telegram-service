@@ -77,5 +77,4 @@ where:
 
 ## TODO
 
-- RabbitMQ's credentials (login and password);
 - Automatic pagination of huge messages!
