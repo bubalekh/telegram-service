@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestSender {
-    //private final static String QUEUE_NAME = "test-queue";
-    private final static String QUEUE_NAME = "receive.queue";
+    private final static String QUEUE_NAME = "test-queue";
+    //private final static String QUEUE_NAME = "receive.queue";
 
     public static void main(String[] argv) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
