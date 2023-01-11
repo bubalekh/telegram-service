@@ -74,7 +74,7 @@ or in kubernetes (**telegram-service-deployment.yml**):
           startupProbe:
             tcpSocket:
               port: 8080
-            initialDelaySeconds: 5
+            initialDelaySeconds: 10
             periodSeconds: 10
             failureThreshold: 3
           livenessProbe:
