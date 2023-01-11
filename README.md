@@ -29,6 +29,13 @@ or in **docker-compose.yml**:
             RABBIT_QUEUE_RECEIVE:
             RABBIT_QUEUE_TRANSMIT:
             TELEGRAM_BOT_TOKEN:
+        healthcheck:
+          test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health/livenessState"]
+          interval: 10s
+          timeout: 10s
+          retries: 3
+          start_period: 10s
+        restart: always
 
 or in kubernetes (**telegram-service-deployment.yml**):
 

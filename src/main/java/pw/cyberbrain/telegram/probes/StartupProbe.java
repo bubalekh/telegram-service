@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class StartupProbe {
     @GetMapping
-    public ResponseEntity<Boolean> startupProbe() {
-        return new ResponseEntity<>(true, HttpStatus.OK);
+    public ResponseEntity<String> startupProbe() {
+        return new ResponseEntity<>("{\"status\":\"UP\"}", HttpStatus.OK);
     }
 }
