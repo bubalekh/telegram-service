@@ -16,7 +16,7 @@ minimal env variables for start is **RABBIT_HOST** and **TELEGRAM_BOT_TOKEN**
 
 run in **docker**:
 
-    docker run -d -e RABBIT_HOST=dummy TELEGRAM_BOT_TOKEN=dummy telegram-service:v0.1
+    docker run -d -e RABBIT_HOST=dummy TELEGRAM_BOT_TOKEN=dummy telegram-service:v1.0
 
 or in **docker-compose.yml**:
 
