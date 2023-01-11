@@ -72,17 +72,18 @@ or in kubernetes (**telegram-service-deployment.yml**):
           - name: TELEGRAM_BOT_TOKEN
             value: ""
           startupProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: 8080
-              failureThreshold: 3
-              periodSeconds: 10
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
           livenessProbe:
             httpGet:
               path: /actuator/health/livenessState
               port: 8080
               initialDelaySeconds: 10
               periodSeconds: 30
+              failureThreshold: 3
 
 ## Environment variables
 
