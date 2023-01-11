@@ -7,6 +7,10 @@ rabbit:
     receive: ${RABBIT_QUEUE_RECEIVE:test-queue}
     transmit: ${RABBIT_QUEUE_TRANSMIT:test-queue}
 
+logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
+
 #Telegram
 telegram:
   bot:
