@@ -1,15 +1,20 @@
 # Telegram APIGateway MicroService
 
+## Build
+
+    ./mvn clean package spring-boot:repackage
+    docker build -t telegram-service:v1.0 .
+
 ## Usage
 
 run in **docker**:
 
-    docker run -d -e RABBIT_HOST=dummy telegram-service:v0.1
+    docker run -d -e RABBIT_HOST=dummy telegram-service:v1.0
 
 or in **docker-compose.yml**:
 
     telegram-service:
-        image: telegram-service:v0.1
+        image: telegram-service:v1.0
         environment:
             RABBIT_HOST:
             RABBIT_USERNAME:
@@ -38,7 +43,7 @@ or in kubernetes (**telegram-service-deployment.yml**):
         spec:
           containers:
           - name: telegram-service
-            image: telegram-service:latest
+            image: telegram-service:v1.0
           env:
           - name: RABBIT_HOST
             value: ""
