@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pw.cyberbrain.telegram.dto.MessageDto;
 import pw.cyberbrain.telegram.service.messaging.IntegrationService;
 import pw.cyberbrain.telegram.service.messaging.RabbitClient;
+import pw.cyberbrain.telegram.util.MessageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             MessageDto messageDto = new MessageDto(update.getMessage().getChatId(), new ArrayList<>(List.of(update.getMessage().getText())));
-            integrationService.sendForHandling(MessageDto.getMessageFromDto(messageDto));
+            integrationService.sendForHandling(MessageUtils.getMessageFromDto(messageDto));
         }
     }
 
@@ -57,10 +58,10 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
         if (dto != null) {
             SendMessage message = new SendMessage();
             StringBuilder payload = new StringBuilder();
-            dto.getPayload().forEach(p -> payload.append(p).append('\n'));
+            dto.payload().forEach(p -> payload.append(p).append('\n'));
             message.setText(payload.toString());
             try {
-                message.setChatId(dto.getChatId());
+                message.setChatId(dto.chatId());
                 Message execute = execute(message);
                 if (execute.getChatId().toString().equals(message.getChatId())) {
                     logger.debug("Message " + message + "was successfully sent to chat " + message.getChatId());
