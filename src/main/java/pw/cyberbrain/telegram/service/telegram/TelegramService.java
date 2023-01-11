@@ -13,6 +13,8 @@ import pw.cyberbrain.telegram.service.messaging.IntegrationService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class TelegramService extends TelegramLongPollingBot implements NotificationService {
@@ -24,6 +26,7 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
 
     @Value("${telegram.bot.name}")
     private String botName;
+    private final int paginationThreshold = 100;
 
     @Autowired
     public TelegramService(IntegrationService integrationService) {
