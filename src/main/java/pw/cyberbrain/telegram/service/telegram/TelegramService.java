@@ -20,8 +20,6 @@ import java.util.List;
 @Service
 public class TelegramService extends TelegramLongPollingBot implements NotificationService {
 
-    private boolean telegramReadinessFlag = false;
-
     private final Logger logger = LoggerFactory.getLogger(RabbitClient.class);
     private final IntegrationService integrationService;
 
@@ -74,17 +72,7 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
                 System.exit(1);
             }
         }
+        logger.debug("Cannot send message to Telegram API!");
         return false;
-    }
-
-    @Override
-    public void onRegister() {
-        super.onRegister();
-        telegramReadinessFlag = true;
-        //TODO: Liveness Probe System.out.println("Bot has been registered");
-    }
-
-    public boolean isTelegramReady() {
-        return telegramReadinessFlag;
     }
 }
