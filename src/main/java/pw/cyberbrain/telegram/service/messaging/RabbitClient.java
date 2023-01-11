@@ -1,9 +1,6 @@
 package pw.cyberbrain.telegram.service.messaging;
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.DeliverCallback;
+import com.rabbitmq.client.*;
 import org.aopalliance.reflect.Class;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,9 +50,11 @@ public class RabbitClient implements IntegrationService {
     @Override
     public void setConsumingCallback(Object callback) {
         try {
-            DeliverCallback deliverCallback = (DeliverCallback) callback;
-            channel.basicConsume(RECEIVE_QUEUE, true, deliverCallback, consumerTag -> {});
-            logger.info("RabbitMQ Consume callback has been set up");
+            if (callback instanceof DeliverCallback deliverCallback) {
+                channel.basicConsume(RECEIVE_QUEUE, false, deliverCallback, consumerTag -> {});
+                logger.info("RabbitMQ Consume callback has been set up");
+            }
+            else System.out.println("RabbitMQ callback object has wrong type!");
         } catch (IOException e) {
             logger.error("RabbitMQ Consume callback set up failed!");
             throw new RuntimeException(e);
@@ -81,6 +80,22 @@ public class RabbitClient implements IntegrationService {
             logger.info("RabbitMQ client termination has been completed!");
         } catch (IOException | TimeoutException e) {
             logger.info("Error in RabbitMQ client termination stage!");
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void setMessageAck(Object message, boolean isHandled) {
+        try {
+            if (message instanceof Delivery delivery) {
+                if (isHandled) {
+                    channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+                } else {
+                    channel.basicNack(delivery.getEnvelope().getDeliveryTag(), false, true);
+                }
+            }
+        }
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

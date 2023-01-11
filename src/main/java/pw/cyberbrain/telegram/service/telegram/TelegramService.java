@@ -5,16 +5,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pw.cyberbrain.telegram.dto.MessageDto;
 import pw.cyberbrain.telegram.service.messaging.IntegrationService;
-import pw.cyberbrain.telegram.service.messaging.RabbitClient;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class TelegramService extends TelegramLongPollingBot implements NotificationService {
@@ -26,7 +24,6 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
 
     @Value("${telegram.bot.name}")
     private String botName;
-    private final int paginationThreshold = 100;
 
     @Autowired
     public TelegramService(IntegrationService integrationService) {
@@ -52,7 +49,7 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
     }
 
     @Override
-    public void sendNotification(MessageDto dto) {
+    public boolean sendNotification(MessageDto dto) {
         if (dto != null) {
             SendMessage message = new SendMessage();
             StringBuilder payload = new StringBuilder();
@@ -60,11 +57,15 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
             message.setText(payload.toString());
             try {
                 message.setChatId(dto.getChatId());
-                execute(message);
+                Message execute = execute(message);
+                if (execute.getChatId().toString().equals(message.getChatId())) {
+                    return true;
+                }
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
         }
+        return false;
     }
 
     @Override

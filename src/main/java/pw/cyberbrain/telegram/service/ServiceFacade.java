@@ -22,7 +22,7 @@ public class ServiceFacade {
     public ServiceFacade(NotificationService notificationService, IntegrationService integrationService) {
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
-            notificationService.sendNotification(MessageDto.getMessageDto(message));
+            integrationService.setMessageAck(delivery, notificationService.sendNotification(MessageDto.getMessageDto(message)));
             logger.info("Message " + message + " has been received!");
         };
         integrationService.setConsumingCallback(deliverCallback);
