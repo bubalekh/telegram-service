@@ -21,7 +21,7 @@ run in **docker**:
 or in **docker-compose.yml**:
 
     telegram-service:
-        image: telegram-service:v0.1
+        image: telegram-service:v1.0
         environment:
             RABBIT_HOST:
             RABBIT_USERNAME:
@@ -50,7 +50,7 @@ or in kubernetes (**telegram-service-deployment.yml**):
         spec:
           containers:
           - name: telegram-service
-            image: telegram-service:latest
+            image: telegram-service:v1.0
           env:
           - name: RABBIT_HOST
             value: ""
