@@ -74,6 +74,8 @@ or in kubernetes (**telegram-service-deployment.yml**):
 **RABBIT_QUEUE_TRANSMIT** - the name of the queue to which messages from Telegram users will be sent to your service.  
 **TELEGRAM_BOT_TOKEN** - Telegram Bot API token.
 
+**LOG_LEVEL** - debug feature that allows to change root logging level of the application (default: INFO)
+
 ## Message structure
 
 JSON syntax:
