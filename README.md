@@ -68,8 +68,8 @@ or in kubernetes (**telegram-service-deployment.yml**):
 ## Environment variables
 
 **RABBIT_HOST** - hostname for RabbitMQ connection (*default*: localhost).  
-**RABBIT_USERNAME** - username for RabbitMQ connection (*default*: guest).
-**RABBIT_PASSWORD** - password for RabbitMQ connection (*default*: guest).
+**RABBIT_USERNAME** - username for RabbitMQ connection (*default*: guest).  
+**RABBIT_PASSWORD** - password for RabbitMQ connection (*default*: guest).  
 **RABBIT_QUEUE_RECEIVE** - name of the queue from which messages will be sent using the Telegram Service.  
 **RABBIT_QUEUE_TRANSMIT** - the name of the queue to which messages from Telegram users will be sent to your service.  
 **TELEGRAM_BOT_TOKEN** - Telegram Bot API token.

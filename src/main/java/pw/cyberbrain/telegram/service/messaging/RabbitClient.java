@@ -54,7 +54,7 @@ public class RabbitClient implements IntegrationService {
                 channel.basicConsume(RECEIVE_QUEUE, false, deliverCallback, consumerTag -> {});
                 logger.info("RabbitMQ Consume callback has been set up");
             }
-            else System.out.println("RabbitMQ callback object has wrong type!");
+            else logger.error("RabbitMQ callback object has wrong type!");
         } catch (IOException e) {
             logger.error("RabbitMQ Consume callback set up failed!");
             throw new RuntimeException(e);
@@ -65,7 +65,7 @@ public class RabbitClient implements IntegrationService {
     public void sendForHandling(String message) {
         try {
             channel.basicPublish("", TRANSMIT_QUEUE, null, message.getBytes());
-            logger.info("Message: " + message + " has been sent!");
+            logger.debug("Message: " + message + " has been sent!");
         } catch (IOException e) {
             logger.error("Message " + message + "was not sent!");
             throw new RuntimeException(e);
@@ -79,7 +79,7 @@ public class RabbitClient implements IntegrationService {
             connection.close();
             logger.info("RabbitMQ client termination has been completed!");
         } catch (IOException | TimeoutException e) {
-            logger.info("Error in RabbitMQ client termination stage!");
+            logger.error("Error in RabbitMQ client termination stage!");
             throw new RuntimeException(e);
         }
     }
@@ -90,8 +90,10 @@ public class RabbitClient implements IntegrationService {
             if (message instanceof Delivery delivery) {
                 if (isHandled) {
                     channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+                    logger.debug("Set ACK to message " + delivery.getEnvelope().getDeliveryTag());
                 } else {
                     channel.basicNack(delivery.getEnvelope().getDeliveryTag(), false, true);
+                    logger.debug("Set NACK to message " + delivery.getEnvelope().getDeliveryTag());
                 }
             }
         }

@@ -15,15 +15,14 @@ import java.nio.charset.StandardCharsets;
 
 @Service
 public class ServiceFacade {
-
-    Logger logger = LoggerFactory.getLogger(RabbitClient.class);
+    private final Logger logger = LoggerFactory.getLogger(RabbitClient.class);
 
     @Autowired
     public ServiceFacade(NotificationService notificationService, IntegrationService integrationService) {
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
             integrationService.setMessageAck(delivery, notificationService.sendNotification(MessageDto.getMessageDto(message)));
-            logger.info("Message " + message + " has been received!");
+            logger.debug("Message " + message + " has been received!");
         };
         integrationService.setConsumingCallback(deliverCallback);
     }

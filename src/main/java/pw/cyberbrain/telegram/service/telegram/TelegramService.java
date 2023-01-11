@@ -1,5 +1,7 @@
 package pw.cyberbrain.telegram.service.telegram;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pw.cyberbrain.telegram.dto.MessageDto;
 import pw.cyberbrain.telegram.service.messaging.IntegrationService;
+import pw.cyberbrain.telegram.service.messaging.RabbitClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.List;
 @Service
 public class TelegramService extends TelegramLongPollingBot implements NotificationService {
 
+    private final Logger logger = LoggerFactory.getLogger(RabbitClient.class);
     private final IntegrationService integrationService;
 
     @Value("${telegram.bot.token}")
@@ -59,12 +63,14 @@ public class TelegramService extends TelegramLongPollingBot implements Notificat
                 message.setChatId(dto.getChatId());
                 Message execute = execute(message);
                 if (execute.getChatId().toString().equals(message.getChatId())) {
+                    logger.debug("Message " + message + "was successfully sent to chat " + message.getChatId());
                     return true;
                 }
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
         }
+        logger.debug("Cannot send message to Telegram API!");
         return false;
     }
 
