@@ -112,3 +112,5 @@ where:
 ## TODO
 
 - Automatic pagination of huge messages!
+- Complete **about** section of repo
+
